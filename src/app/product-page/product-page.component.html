@@ -1,0 +1,35 @@
+<div class="grid-container col-md-12">
+    <button at-raised-button color="primary" routerLink = '/products/'>Back To Products</button>
+    <div class="grid-item col-md-6">
+        <div>
+            <carousel cellsToShow='2'[images]="images" cellWidth="50%"></carousel>
+        </div>
+    </div>
+    <div class="grid-item col-md-6">
+        <div>
+            <h3>{{productInfo.name}}</h3>
+            <hr>
+            <p>{{productInfo.description}}</p>
+            <br>
+            <p>{{productInfo.price}}</p>   
+            <p>
+                <span>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Select Size</mat-label>
+                        <mat-select>
+                          <mat-option *ngFor="let size of sizeList" [value]="size">
+                            {{size}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                </span>
+            </p>
+            <div class="example-button-row">
+                <button mat-raised-button color="primary">Buy Now</button>
+                <button mat-raised-button color="accent">Wishlist</button>
+              </div>
+        </div>
+    </div>
+</div>
+
+

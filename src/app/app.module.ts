@@ -24,6 +24,10 @@ import { SignupComponent } from "./auth/signup/signup.component";
 import { AuthInterceptor } from "./auth/auth-interceptor";
 import { ErrorInterceptor } from "./error-interceptor";
 import { ErrorComponent } from "./error/error.component";
+import { ProductComponent } from './product/product.component';
+import { ProductPageComponent } from './product-page/product-page.component';
+import { IvyCarouselModule } from "angular-responsive-carousel";
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -33,7 +37,9 @@ import { ErrorComponent } from "./error/error.component";
     PostListComponent,
     LoginComponent,
     SignupComponent,
-    ErrorComponent
+    ErrorComponent,
+    ProductComponent,
+    ProductPageComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +55,9 @@ import { ErrorComponent } from "./error/error.component";
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatDialogModule,
-    HttpClientModule
+    HttpClientModule,
+    IvyCarouselModule,
+    MatSelectModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

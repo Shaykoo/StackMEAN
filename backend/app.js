@@ -5,12 +5,13 @@ const mongoose = require("mongoose");
 
 const postsRoutes = require("./routes/posts");
 const userRoutes = require("./routes/user");
+const productRoutes = require("./routes/product");
 
 const app = express();
 
 mongoose
   .connect(
-    "mongodb+srv://abhishek:QuBuu0T45GDUYlIG@cluster0-ntrwp.mongodb.net/node-angular"
+    "mongodb+srv://AbhishekSharma:jTytkcEfooL5iwNZ@cluster0.sdbmp.mongodb.net/node-angularo"
   )
   .then(() => {
     console.log("Connected to database!");
@@ -38,5 +39,6 @@ app.use((req, res, next) => {
 
 app.use("/api/posts", postsRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/products", productRoutes);
 
 module.exports = app;
