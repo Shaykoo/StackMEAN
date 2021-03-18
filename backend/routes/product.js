@@ -15,7 +15,6 @@ const MIME_TYPE_MAP = {
 };
 
 router.get("", (req, res, next) => {
-  console.log("Tame Impala LIVE");
 //   const pageSize = +req.query.pagesize;
 //   const currentPage = +req.query.page;
 //   if (pageSize && currentPage) {

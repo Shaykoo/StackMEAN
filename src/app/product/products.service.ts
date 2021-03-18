@@ -23,7 +23,6 @@ export class ProductsService {
 
   // Getting All the Products
   getProducts(){
-    console.log("Impala");
     return this.http.get<Product>('http://localhost:3000/api/products')
   }
 

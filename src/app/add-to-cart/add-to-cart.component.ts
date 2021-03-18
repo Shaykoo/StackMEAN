@@ -25,14 +25,12 @@ export class AddToCartComponent implements OnInit {
   ngOnInit() {
     if(!localStorage.getItem('cartProducts')){
       this.getProduct();
-      console.log("One");
     }else{
       this.productInfo = JSON.parse(localStorage.getItem('cartProducts')) ;
       this.featuredImage = this.productInfo.featuredImage;
       this.id = this.productInfo.id;
      // this.selectedProductSub()
       this.cartProducts.push(this.productInfo);
-      console.log("Two", this.cartProducts);
     }
   }
 

@@ -41,7 +41,6 @@ export class ProductPageComponent implements OnInit , OnDestroy {
         return {path: image}
       });
       this.sizeList = this.productInfo.sizes;
-      console.log("already have", this.productInfo)
     }
     // this.images = [
     //   { path: "https://i.pinimg.com/474x/46/04/e8/4604e89d110d18978981278491446b40.jpg"},
@@ -55,11 +54,10 @@ export class ProductPageComponent implements OnInit , OnDestroy {
   productSubscribing(){
     this.subscription = this.service.productInfoObs
     .subscribe((product: any) => {
-      console.log("RealTime",product);
+      // console.log("RealTime",product);
       this.productInfo = product;
       this.images = product.image;
       this.sizeList = product.sizes;
-      console.log("new added", this.productInfo, this.images)
     });
   }
 
@@ -81,7 +79,6 @@ export class ProductPageComponent implements OnInit , OnDestroy {
     }else{
       this.mixProductService.removingSelectedProduct(this.removingProductId)
       .subscribe(deletedProduct => {
-        console.log("deleted product", deletedProduct);
         this.showInfo();
       })
     }
