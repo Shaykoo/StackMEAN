@@ -2,7 +2,9 @@ const express = require("express");
 const multer = require("multer");
 
 const Product = require("../models/product");
+const selectedProduct = require("../models/selectedProducts");
 const checkAuth = require("../middleware/check-auth");
+const selectedProducts = require("../models/selectedProducts");
 
 const router = express.Router();
 
@@ -16,14 +18,12 @@ router.get("", (req, res, next) => {
   console.log("Tame Impala LIVE");
 //   const pageSize = +req.query.pagesize;
 //   const currentPage = +req.query.page;
-  const productQuery = Product.find();
-  
-  
-
-  let fetchedProducts;
 //   if (pageSize && currentPage) {
 //     postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
 //   }
+
+const productQuery = Product.find();
+let fetchedProducts;
 productQuery
     .then(documents => {
         fetchedProducts = documents;
@@ -39,7 +39,8 @@ productQuery
             price: product.price,
             image: product.image,
             id: product._id,
-            featuredImage: product.featuredImage 
+            featuredImage: product.featuredImage,
+            sizes: product.sizes 
           }
         }),
         maxProducts: count
@@ -55,29 +56,58 @@ productQuery
     });
 });
 
-// router.post("", (req, res, next)=> {
-//     const product = new Product({
-//         name: "Black Tee Star",
-//         description: "100% cotton, heavy weight",
-//         price: 888,
-//         image: "https://i.pinimg.com/564x/36/61/c7/3661c7ced4d11db54d9ae7a3e2782959.jpg"
-//     });
-//     product.save()
-//     .then(createdProduct => {
-//         res.status(201).json({
-//           message: "Product added successfully",
-//           post: {
-//             ...createdProduct,
-//             id: createdProduct._id
-//           }
-//         });
-//       })
-//       .catch(error => {
-//         res.status(500).json({
-//           message: "Creating a product failed!"
-//         });
-//       });
-// })
+router.post("/:id", (req, res, next)=> {
+  const selectedProduct = new selectedProducts({
+        name: req.body.name,
+        description: req.body.description,
+        price: req.body.price,
+        image: req.body.image,
+        featuredImage: req.body.featuredImage,
+        sizes: req.body.sizes,
+        selectedSize : req.body.selectedSize 
+  })
+    console.log("selec", selectedProduct);
+    selectedProduct.save()
+    .then(selectedProd => {
+        res.status(201).json({
+          message: "Selected Product Added Successfully",
+          product: {
+            selectedProd
+            // ...selectedProduct,
+            // id: selectedProduct._id
+          }
+        });
+      })
+      .catch(error => {
+        let message = 'Unable to add to cart!';
+        if(error.errors.selectedSize){
+          message = "Please select a size."
+        } 
+        res.status(500).json({
+          message: message
+        });
+      });
+})
+
+router.delete("/:id", (req, res, next)=> {
+  selectedProduct.deleteOne({ _id: req.params.id })
+  .then((result)=> {
+    console.log('result',result)
+    if (result.n > 0) {
+      res.status(200).json({
+        message: "Selected Product Deleted Successfully"
+      })
+    } else {
+      res.status(400).json({ message: "Not authorized!" });
+    }
+    
+  })
+  .catch((error)=> {
+    res.status(500).json({
+      message: "Selected Product Deletion Failed"
+    });
+  })
+})
 
 // router.get("/:id", (req, res, next) => {
 //   Post.findById(req.params.id)

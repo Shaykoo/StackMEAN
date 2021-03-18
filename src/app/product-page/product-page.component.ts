@@ -2,8 +2,11 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms'
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { selectedProduct } from '../add-to-cart/selectedProduct.model';
 import { Product } from '../product/product.model';
 import { ProductsService } from '../product/products.service';
+import { MixProductService } from '../services/mix-product.service';
+import { ToastrManager } from 'ng6-toastr-notifications';
 
 @Component({
   selector: 'app-product-page',
@@ -12,14 +15,21 @@ import { ProductsService } from '../product/products.service';
 })
 export class ProductPageComponent implements OnInit , OnDestroy {
 
-  constructor( private service: ProductsService , private route: Router , private activatedRoute: ActivatedRoute) {}
+  constructor( private service: ProductsService,
+               private mixProductService: MixProductService,
+               public toastr: ToastrManager) {}
 
   images = [];
   size = new FormControl();
   subscription: Subscription;
   productInfo : any;
+  selectedSize = '';
+  removingProductId: string;
 
-  sizeList: string[] = ["XS","S","M","L","XL","XXL"];
+  addToCartBtn : boolean = false;
+  addToCartBtnText : string = 'Add To Cart';
+
+  sizeList: string[];
 
   ngOnInit() { 
     if(!localStorage.getItem('product')){
@@ -30,6 +40,7 @@ export class ProductPageComponent implements OnInit , OnDestroy {
       this.images = this.productInfo.image.map((image)=>{
         return {path: image}
       });
+      this.sizeList = this.productInfo.sizes;
       console.log("already have", this.productInfo)
     }
     // this.images = [
@@ -47,8 +58,43 @@ export class ProductPageComponent implements OnInit , OnDestroy {
       console.log("RealTime",product);
       this.productInfo = product;
       this.images = product.image;
+      this.sizeList = product.sizes;
       console.log("new added", this.productInfo, this.images)
     });
+  }
+
+  onAddCart(){
+    const product = {
+      ...this.productInfo,
+      selectedSize: this.selectedSize,
+    }
+    this.addToCartBtn = (this.addToCartBtn) ? false : true;
+    this.addToCartBtnText = (this.addToCartBtn) ?  'Remove From Cart': 'Add To Cart';
+    if(this.addToCartBtn){
+      this.service.addingProduct(product);
+      localStorage.setItem('cartProducts', JSON.stringify(product));
+      this.mixProductService.addingSelectedProduct(product)
+      .subscribe((productData: any)=> {
+        this.removingProductId = productData.product.selectedProd._id;
+        this.showSuccess();
+      });
+    }else{
+      this.mixProductService.removingSelectedProduct(this.removingProductId)
+      .subscribe(deletedProduct => {
+        console.log("deleted product", deletedProduct);
+        this.showInfo();
+      })
+    }
+  }
+
+
+  // Toastr Methods   
+  showSuccess() {
+    this.toastr.successToastr('', 'Product is moved to the cart.');
+  }
+
+  showInfo() {
+    this.toastr.infoToastr('', 'Product removed from the cart.');
   }
 
   ngOnDestroy(){

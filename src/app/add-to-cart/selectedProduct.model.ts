@@ -1,4 +1,4 @@
-export interface Product {
+export interface selectedProduct {
     name: string;
     description: string;
     price: string;
@@ -6,4 +6,5 @@ export interface Product {
     id: string;
     featuredImage: string;
     sizes: Array<ArrayBuffer>;
-} 
+    selectedSize: string;
+}

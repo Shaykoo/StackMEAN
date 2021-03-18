@@ -7,6 +7,12 @@
     <li *ngIf="userIsAuthenticated">
       <a mat-button routerLink="/create" routerLinkActive="mat-accent">New Post</a>
     </li>
+    <li>
+      <mat-icon (click)="onWishListedProd()"> favorite_border</mat-icon>
+    </li>
+    <li>
+      <mat-icon (click)="onAddToCart()">add_shopping_cart</mat-icon>
+    </li>
     <li *ngIf="!userIsAuthenticated">
       <a mat-button routerLink="/login" routerLinkActive="mat-accent">Login</a>
     </li>

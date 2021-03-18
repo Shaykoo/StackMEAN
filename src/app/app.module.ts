@@ -3,6 +3,9 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from "@angular/core";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { ToastrModule } from 'ng6-toastr-notifications';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatIconModule } from '@angular/material/icon';
 import {
   MatInputModule,
   MatCardModule,
@@ -28,6 +31,9 @@ import { ProductComponent } from './product/product.component';
 import { ProductPageComponent } from './product-page/product-page.component';
 import { IvyCarouselModule } from "angular-responsive-carousel";
 import {MatSelectModule} from '@angular/material/select';
+import { WishlistComponent } from './wishlist/wishlist.component';
+import { AddToCartComponent } from './add-to-cart/add-to-cart.component';
+import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +45,10 @@ import {MatSelectModule} from '@angular/material/select';
     SignupComponent,
     ErrorComponent,
     ProductComponent,
-    ProductPageComponent
+    ProductPageComponent,
+    WishlistComponent,
+    AddToCartComponent,
+    ShoppingListComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +66,10 @@ import {MatSelectModule} from '@angular/material/select';
     MatDialogModule,
     HttpClientModule,
     IvyCarouselModule,
-    MatSelectModule
+    MatSelectModule,
+    FontAwesomeModule,
+    MatIconModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

@@ -10,3 +10,11 @@
   button{
     margin:5px;
   }
+
+  .selectedBtn{
+    background-color: darkgoldenrod;
+  }
+
+  .deselectedBtn{
+    background-color: green;
+  }

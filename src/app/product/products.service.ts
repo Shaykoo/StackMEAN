@@ -15,6 +15,10 @@ export class ProductsService {
   private productInfo = new BehaviorSubject({});
   productInfoObs = this.productInfo.asObservable();
 
+  private product = new BehaviorSubject({});
+  InfoObs = this.product.asObservable();
+
+
   constructor(private http: HttpClient) { }
 
   // Getting All the Products
@@ -27,6 +31,10 @@ export class ProductsService {
  
   changeProductInfo(product: Product) {
     this.productInfo.next(product)
+  }
+
+  addingProduct(message: any) {
+    this.product.next(message);
   }
 
 
