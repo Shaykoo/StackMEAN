@@ -18,6 +18,9 @@ export class ProductsService {
   private product = new BehaviorSubject({});
   InfoObs = this.product.asObservable();
 
+  private productRemoval = new BehaviorSubject({});
+  RemovedObs = this.productRemoval.asObservable();
+
 
   constructor(private http: HttpClient) { }
 
@@ -34,6 +37,10 @@ export class ProductsService {
 
   addingProduct(message: any) {
     this.product.next(message);
+  }
+
+  deletingProduct(message: any){
+    this.productRemoval.next(message);
   }
 
 

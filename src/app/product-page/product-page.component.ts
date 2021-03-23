@@ -7,17 +7,20 @@ import { Product } from '../product/product.model';
 import { ProductsService } from '../product/products.service';
 import { MixProductService } from '../services/mix-product.service';
 import { ToastrManager } from 'ng6-toastr-notifications';
+import { ErrorService } from '../error/error.service';
 
 @Component({
   selector: 'app-product-page',
   templateUrl: './product-page.component.html',
   styleUrls: ['./product-page.component.css']
 })
-export class ProductPageComponent implements OnInit , OnDestroy {
+export class ProductPageComponent implements OnInit , OnDestroy, AfterViewInit {
 
   constructor( private service: ProductsService,
                private mixProductService: MixProductService,
-               public toastr: ToastrManager) {}
+               public toastr: ToastrManager,
+               private errorServive: ErrorService,
+               private route: ActivatedRoute) {}
 
   images = [];
   size = new FormControl();
@@ -25,23 +28,23 @@ export class ProductPageComponent implements OnInit , OnDestroy {
   productInfo : any;
   selectedSize = '';
   removingProductId: string;
+  state: any;
 
   addToCartBtn : boolean = false;
   addToCartBtnText : string = 'Add To Cart';
 
   sizeList: string[];
 
-  ngOnInit() { 
-    if(!localStorage.getItem('product')){
-      this.productSubscribing();
-      localStorage.setItem('product', this.productInfo);
-    }else{
-      this.productInfo = JSON.parse(localStorage.getItem('product')) ;
-      this.images = this.productInfo.image.map((image)=>{
-        return {path: image}
-      });
-      this.sizeList = this.productInfo.sizes;
-    }
+  ngOnInit(){ 
+    console.log("One");
+    this.getProduct();
+  }
+
+  ngAfterViewInit(){
+    console.log("Two");
+    // this.getProduct();
+  }
+
     // this.images = [
     //   { path: "https://i.pinimg.com/474x/46/04/e8/4604e89d110d18978981278491446b40.jpg"},
     //   { path: "https://i.pinimg.com/474x/55/03/0c/55030cafbee7e3efa2e259c32fd59e61.jpg"},
@@ -49,41 +52,50 @@ export class ProductPageComponent implements OnInit , OnDestroy {
     //   { path: "https://i.pinimg.com/474x/7d/b0/60/7db06038dc9b8fc61c4f3db74462d0a5.jpg"} 
     // ]
     
+  getProduct(){
+    this.subscription = this.route.paramMap.subscribe((id: any) => {
+      console.log("id", id.params.id)
+      let Id = id.params.id;
+      this.mixProductService.getselectedProduct(Id)
+      .subscribe((product: any)=> {
+        console.log("new result", product)
+        this.productInfo = product;
+        this.images = this.productInfo.image.map((image: any)=>{
+        return {path: image}
+        });
+        this.sizeList = product.sizes;
+      })
+    })
   }
 
-  productSubscribing(){
-    this.subscription = this.service.productInfoObs
-    .subscribe((product: any) => {
-      // console.log("RealTime",product);
-      this.productInfo = product;
-      this.images = product.image;
-      this.sizeList = product.sizes;
-    });
-  }
-
-  onAddCart(){
+  onAddRemoveCart(){
     const product = {
       ...this.productInfo,
       selectedSize: this.selectedSize,
     }
+    if(!product.selectedSize){
+      this.showWarning();
+      return;
+    }
     this.addToCartBtn = (this.addToCartBtn) ? false : true;
     this.addToCartBtnText = (this.addToCartBtn) ?  'Remove From Cart': 'Add To Cart';
     if(this.addToCartBtn){
-      this.service.addingProduct(product);
-      localStorage.setItem('cartProducts', JSON.stringify(product));
+     //localStorage.setItem('cartProducts', JSON.stringify(product));
       this.mixProductService.addingSelectedProduct(product)
       .subscribe((productData: any)=> {
         this.removingProductId = productData.product.selectedProd._id;
+        this.service.addingProduct(product);
         this.showSuccess();
       });
     }else{
       this.mixProductService.removingSelectedProduct(this.removingProductId)
       .subscribe(deletedProduct => {
+        console.log("One", deletedProduct)
+        this.service.deletingProduct(deletedProduct)
         this.showInfo();
       })
     }
   }
-
 
   // Toastr Methods   
   showSuccess() {
@@ -94,8 +106,13 @@ export class ProductPageComponent implements OnInit , OnDestroy {
     this.toastr.infoToastr('', 'Product removed from the cart.');
   }
 
+  showWarning(){
+    this.toastr.infoToastr('', 'Please select a size.');
+  }
+
   ngOnDestroy(){
-   // this.subscription.unsubscribe();
+   this.subscription.unsubscribe();
+  // this.state.unsubscribe();
   }
 
 }

@@ -16,13 +16,13 @@ const routes: Routes = [
   { path: "", redirectTo: "products", pathMatch: 'full'},
   { path: "create", component: PostCreateComponent, canActivate: [AuthGuard] },
   { path: "edit/:postId", component: PostCreateComponent, canActivate: [AuthGuard] },
-  { path: "login", component: LoginComponent },
-  { path: "signup", component: SignupComponent },
   { path: "products", component: ProductComponent },
   { path: "products/:id", component: ProductPageComponent},
   { path: "wishlist", component: WishlistComponent},
   { path: "cart", component: AddToCartComponent},
-  { path: "checkout", component: ShoppingListComponent}
+  { path: "checkout", component: ShoppingListComponent},
+  { path : "lazy", loadChildren: './lazy/lazy.module#LazyModule'},
+  { path : "auth", loadChildren: './auth/auth.module#AuthModule'}
 ];
 
 @NgModule({

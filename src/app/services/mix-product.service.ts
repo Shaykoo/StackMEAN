@@ -19,4 +19,13 @@ export class MixProductService {
     return this.http.delete<selectedProduct>(`http://localhost:3000/api/products/${selectedProduct}`)
   }
 
+  getselectedProduct(id: any){
+    console.log("sending ID", id)
+    return this.http.get<selectedProduct>(`http://localhost:3000/api/products/${id}`)
+  }
+
+  getSelectedProducts(){
+    return this.http.get<selectedProduct>(`http://localhost:3000/api/products/cart`)
+  }
+
 }

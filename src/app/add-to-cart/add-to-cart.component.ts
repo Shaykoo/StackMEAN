@@ -14,7 +14,7 @@ export class AddToCartComponent implements OnInit {
   productInfo: any;
   featuredImage: any;
   subscription : Subscription;
-  id:any;
+  id: any;
 
   //Array of products
   cartProducts: any = [];
@@ -23,25 +23,34 @@ export class AddToCartComponent implements OnInit {
               private MixProductService: MixProductService) { }
 
   ngOnInit() {
-    if(!localStorage.getItem('cartProducts')){
-      this.getProduct();
-    }else{
-      this.productInfo = JSON.parse(localStorage.getItem('cartProducts')) ;
-      this.featuredImage = this.productInfo.featuredImage;
-      this.id = this.productInfo.id;
-     // this.selectedProductSub()
-      this.cartProducts.push(this.productInfo);
-    }
+    this.getSelectedProducts();
   }
 
-  getProduct(){
-    this.subscription = this.productService.InfoObs
-    .subscribe(product => {
-      this.productInfo = product;
-      this.featuredImage = this.productInfo.featuredImage;
-      this.cartProducts.push(this.productInfo);
-    });
+  getSelectedProducts(){
+    this.subscription = this.MixProductService.getSelectedProducts()
+    .subscribe((selectedProducts : any) => {
+      this.cartProducts.push(...selectedProducts.products);
+      console.log("Cart Stuff", this.cartProducts);
+    })
   }
+
+  // getProduct(){
+  //   this.subscription = this.productService.InfoObs
+  //   .subscribe(product => {
+  //     console.log("whitney", product)
+  //     this.cartProducts.push(product);
+  //   });
+  // }
+
+  // removeProduct(){
+  //   this.productService.RemovedObs
+  //   .subscribe(product => {
+  //     let info: any = product;
+  //     console.log("Removeding product", info.productID);
+  //     let index = this.cartProducts.indexOf(info.productID);
+  //     this.cartProducts.splice(index, 1);
+  //   })
+  // }
 
   // selectedProductSub(){
   //   this.MixProductService.addingSelectedProduct(this.productInfo)
