@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: "", redirectTo: "products", pathMatch: 'full'},
   { path: "create", component: PostCreateComponent, canActivate: [AuthGuard] },
   { path: "edit/:postId", component: PostCreateComponent, canActivate: [AuthGuard] },
-  { path: "products", component: ProductComponent },
+  { path: "products", component: ProductComponent, canActivate: [AuthGuard] },
   { path: "products/:id", component: ProductPageComponent},
   { path: "wishlist", component: WishlistComponent},
   { path: "cart", component: AddToCartComponent},

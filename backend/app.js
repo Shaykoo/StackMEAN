@@ -11,7 +11,7 @@ const app = express();
 
 mongoose
   .connect(
-    "mongodb+srv://AbhishekSharma:jTytkcEfooL5iwNZ@cluster0.sdbmp.mongodb.net/node-angularo"
+    "mongodb+srv://AbhishekSharma:" + process.env.MONGO_ATLAS_PWD + "@cluster0.sdbmp.mongodb.net/node-angularo"
   )
   .then(() => {
     console.log("Connected to database!");

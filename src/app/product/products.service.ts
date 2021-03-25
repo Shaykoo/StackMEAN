@@ -6,6 +6,10 @@ import { Router } from "@angular/router";
 import { Product } from '../product/product.model';
 import { BehaviorSubject } from 'rxjs';
 
+import { environment } from '../../environments/environment';
+
+const BACKEND_URL = environment.apiURL;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,7 +30,7 @@ export class ProductsService {
 
   // Getting All the Products
   getProducts(){
-    return this.http.get<Product>('http://localhost:3000/api/products')
+    return this.http.get<Product>(BACKEND_URL + 'products');
   }
 
   //Sending product info to products page
